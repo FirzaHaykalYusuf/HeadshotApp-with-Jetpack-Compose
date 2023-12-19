@@ -110,7 +110,7 @@ fun Sidebar(navController: NavController, showSidebar: MutableState<Boolean>) {
         Text("Camera", modifier = Modifier
             .clickable {
                 navController.navigate("camera") {
-                    popUpTo("main")
+                    popUpTo("main") {inclusive = true}
                     launchSingleTop = true
                 }
                 showSidebar.value = false

@@ -66,6 +66,8 @@ fun FormScreen(
     val imageUriString = sharedPreferences.getString("imageUri", null)
     val imageUri = imageUriString?.let { Uri.parse(it) }
 
+    var hasNavigated by remember { mutableStateOf(false) }
+
     Log.d("ImageUri", "FormScreen: $imageUri")
 
     fun validateAndSubmit() {
@@ -78,16 +80,19 @@ fun FormScreen(
         if (isNameValid && isPhoneValid) {
             viewModel.insertUser(name, phone, imageUri.toString())
             navController.navigate("main") {
-                // Bersihkan seluruh back stack
-                popUpTo(navController.graph.startDestinationId) {
-                    inclusive = true
+                sharedPreferences.edit().remove("imageUri").apply()
+                hasNavigated = true
+                navController.navigate("main") {
+                    popUpTo(navController.graph.startDestinationId) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
                 }
             }
         }
     }
 
-
-    Column(
+        Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
